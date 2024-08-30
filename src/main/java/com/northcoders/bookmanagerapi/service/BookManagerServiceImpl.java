@@ -32,4 +32,9 @@ public class BookManagerServiceImpl implements BookManagerService {
         return bookManagerRepository.findById(id);
     }
 
+    @Override
+    public Optional<Book> replaceBook(Long id, Book book) {
+        return bookManagerRepository.updateBookById(id, book);
+    }
+
 }

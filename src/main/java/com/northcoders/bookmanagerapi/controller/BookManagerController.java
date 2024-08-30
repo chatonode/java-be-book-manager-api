@@ -39,11 +39,23 @@ public class BookManagerController {
 
     @PostMapping
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        String something = "";
         Book newBook = bookManagerService.insertBook(book);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("book", "/api/v1/book/" + newBook.getId().toString());
         return new ResponseEntity<>(newBook, httpHeaders, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody Book book) {
+        Optional<Book> updatedBook = bookManagerService.replaceBook(Long.parseLong(id), book);
+
+        if (updatedBook.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("book", "/api/v1/book/" + updatedBook.get().getId().toString());
+        return new ResponseEntity<>(updatedBook.get(), httpHeaders, HttpStatus.NO_CONTENT);
     }
 
 }

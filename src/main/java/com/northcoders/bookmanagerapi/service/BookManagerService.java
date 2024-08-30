@@ -11,4 +11,5 @@ public interface BookManagerService {
     Book insertBook(Book book);
 
     Optional<Book> getBookById(Long id);
+    Optional<Book> replaceBook(Long id, Book book);
 }
