@@ -163,4 +163,90 @@ public class BookManagerServiceTests {
     }
 
 
+    @Test
+    public void testReplaceBookReturnsUpdatedBookWhenFound() {
+        // Arrange
+        Long bookId = 1L;
+        Book existingBook = new Book(bookId, "Old Title", "Old Description", "Old Author", Genre.Education);
+        Book updatedBook = new Book(bookId, "New Title", "New Description", "New Author", Genre.Fantasy);
+
+        // Stub the repository's findById method to return the existing book
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.of(existingBook));
+
+        // Stub the repository's save method to return the updated book
+        when(mockBookManagerRepository.save(existingBook)).thenReturn(existingBook);
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.replaceBook(bookId, updatedBook);
+
+        // Assert
+        assertThat(actualResult).isPresent();
+        assertThat(actualResult.get().getTitle()).isEqualTo(updatedBook.getTitle());
+        assertThat(actualResult.get().getDescription()).isEqualTo(updatedBook.getDescription());
+        assertThat(actualResult.get().getAuthor()).isEqualTo(updatedBook.getAuthor());
+        assertThat(actualResult.get().getGenre()).isEqualTo(updatedBook.getGenre());
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+        verify(mockBookManagerRepository, times(1)).save(existingBook);
+    }
+
+    @Test
+    public void testReplaceBookReturnsEmptyWhenBookNotFound() {
+        // Arrange
+        Long bookId = 2L;
+        Book updatedBook = new Book(bookId, "New Title", "New Description", "New Author", Genre.Fantasy);
+
+        // Stub the repository's findById method to return an empty Optional when the book ID is not found
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.replaceBook(bookId, updatedBook);
+
+        // Assert
+        assertThat(actualResult).isNotPresent();
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+        verify(mockBookManagerRepository, times(0)).save(any(Book.class));  // Ensure save is not called
+    }
+
+    @Test
+    public void testReplaceBookHandlesNullIdGracefully() {
+        // Arrange
+        Long bookId = null;
+        Book updatedBook = new Book(bookId, "New Title", "New Description", "New Author", Genre.Fantasy);
+
+        // Stub the repository's findById method to handle a null ID gracefully, returning an empty Optional
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.replaceBook(bookId, updatedBook);
+
+        // Assert
+        assertThat(actualResult).isNotPresent();
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+        verify(mockBookManagerRepository, times(0)).save(any(Book.class));  // Ensure save is not called
+    }
+
+    @Test
+    public void testReplaceBookDoesNotChangeId() {
+        // Arrange
+        Long bookId = 1L;
+        Book existingBook = new Book(bookId, "Old Title", "Old Description", "Old Author", Genre.Education);
+        Book updatedBook = new Book(2L, "New Title", "New Description", "New Author", Genre.Fantasy);  // Different ID
+
+        // Stub the repository's findById method to return the existing book
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.of(existingBook));
+
+        // Stub the repository's save method
+        when(mockBookManagerRepository.save(existingBook)).thenReturn(existingBook);
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.replaceBook(bookId, updatedBook);
+
+        // Assert
+        assertThat(actualResult).isPresent();
+        assertThat(actualResult.get().getId()).isEqualTo(bookId);  // Ensure ID remains unchanged
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+        verify(mockBookManagerRepository, times(1)).save(existingBook);
+    }
+
+
 }
