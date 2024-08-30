@@ -249,4 +249,77 @@ public class BookManagerServiceTests {
     }
 
 
+    @Test
+    public void testDeleteBookByIdDeletesAndReturnsBookWhenFound() {
+        // Arrange
+        Long bookId = 1L;
+        Book existingBook = new Book(bookId, "Book to be Deleted", "Description", "Author", Genre.Education);
+
+        // Stub the repository's findById method to return the existing book
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.of(existingBook));
+
+        // Do nothing when deleteById is called
+        doNothing().when(mockBookManagerRepository).deleteById(bookId);
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.deleteBookById(bookId);
+
+        // Assert
+        assertThat(actualResult).isPresent();
+        assertThat(actualResult.get()).isEqualTo(existingBook);
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+        verify(mockBookManagerRepository, times(1)).deleteById(bookId);
+    }
+
+    @Test
+    public void testDeleteBookByIdReturnsEmptyWhenBookNotFound() {
+        // Arrange
+        Long bookId = 2L;
+
+        // Stub the repository's findById method to return an empty Optional when the book ID is not found
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.deleteBookById(bookId);
+
+        // Assert
+        assertThat(actualResult).isNotPresent();
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+        verify(mockBookManagerRepository, times(0)).deleteById(anyLong());  // Ensure deleteById is not called
+    }
+
+    @Test
+    public void testDeleteBookByIdHandlesNullIdGracefully() {
+        // Arrange
+        Long bookId = null;
+
+        // Stub the repository's findById method to handle a null ID gracefully, returning an empty Optional
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.deleteBookById(bookId);
+
+        // Assert
+        assertThat(actualResult).isNotPresent();
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+        verify(mockBookManagerRepository, times(0)).deleteById(anyLong());  // Ensure deleteById is not called
+    }
+
+    @Test
+    public void testDeleteBookByIdDoesNotDeleteIfBookNotFound() {
+        // Arrange
+        Long bookId = 3L;
+
+        // Stub the repository's findById method to return an empty Optional when the book is not found
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.deleteBookById(bookId);
+
+        // Assert
+        assertThat(actualResult).isNotPresent();
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+        verify(mockBookManagerRepository, times(0)).deleteById(anyLong());  // Ensure deleteById is not called
+    }
+
 }
