@@ -58,4 +58,60 @@ public class BookManagerServiceTests {
         assertThat(actualResult).isEqualTo(book);
     }
 
+    @Test
+    public void testGetBooksByGenreReturnsListOfBooks() {
+        // Arrange
+        Genre genre = Genre.Education;
+        List<Book> books = new ArrayList<>();
+        books.add(new Book(1L, "Educational Book One", "This is the description for Educational Book One", "Author One", genre));
+        books.add(new Book(2L, "Educational Book Two", "This is the description for Educational Book Two", "Author Two", genre));
+
+        // Stub the repository's findByGenre method to return a list of books
+        when(mockBookManagerRepository.findByGenre(genre)).thenReturn(books);
+
+        // Act
+        List<Book> actualResult = bookManagerServiceImpl.getBooksByGenre(genre);
+
+        // Assert
+        assertThat(actualResult).hasSize(2);
+        assertThat(actualResult).isEqualTo(books);
+        verify(mockBookManagerRepository, times(1)).findByGenre(genre);
+    }
+
+    @Test
+    public void testGetBooksByGenreReturnsEmptyListWhenNoBooksFound() {
+        // Arrange
+        Genre genre = Genre.Fantasy;
+        List<Book> emptyBooks = new ArrayList<>();
+
+        // Stub the repository's findByGenre method to return an empty list
+        when(mockBookManagerRepository.findByGenre(genre)).thenReturn(emptyBooks);
+
+        // Act
+        List<Book> actualResult = bookManagerServiceImpl.getBooksByGenre(genre);
+
+        // Assert
+        assertThat(actualResult).isEmpty();
+        verify(mockBookManagerRepository, times(1)).findByGenre(genre);
+    }
+
+    @Test
+    public void testGetBooksByGenreHandlesNullGenreGracefully() {
+        // Arrange
+        Genre genre = null;
+
+        // Stub the repository's findByGenre method to return an empty list or handle null
+        when(mockBookManagerRepository.findByGenre(genre)).thenReturn(new ArrayList<>());
+
+        // Act
+        List<Book> actualResult = bookManagerServiceImpl.getBooksByGenre(genre);
+
+        // Assert
+        assertThat(actualResult).isEmpty();
+        verify(mockBookManagerRepository, times(1)).findByGenre(genre);
+    }
+
+
+
+
 }
