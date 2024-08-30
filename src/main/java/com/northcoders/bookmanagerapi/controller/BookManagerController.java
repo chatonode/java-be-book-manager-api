@@ -1,6 +1,7 @@
 package com.northcoders.bookmanagerapi.controller;
 
 import com.northcoders.bookmanagerapi.model.Book;
+import com.northcoders.bookmanagerapi.model.Genre;
 import com.northcoders.bookmanagerapi.service.BookManagerService;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,13 @@ public class BookManagerController {
     BookManagerService bookManagerService;
 
     @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks() {
-        List<Book> books = bookManagerService.getAllBooks();
-        return new ResponseEntity<>(books, HttpStatus.OK);
+    public ResponseEntity<List<Book>> getAllBooks(@RequestParam(required = false) Genre genre) {
+
+        if (genre != null && !genre.toString().isBlank()) {
+            return new ResponseEntity<>(bookManagerService.getBooksByGenre(genre), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(bookManagerService.getAllBooks(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

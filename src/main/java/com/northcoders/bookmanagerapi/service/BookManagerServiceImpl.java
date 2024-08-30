@@ -1,6 +1,7 @@
 package com.northcoders.bookmanagerapi.service;
 
 import com.northcoders.bookmanagerapi.model.Book;
+import com.northcoders.bookmanagerapi.model.Genre;
 import com.northcoders.bookmanagerapi.repository.BookManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,14 @@ public class BookManagerServiceImpl implements BookManagerService {
     @Override
     public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
+
         bookManagerRepository.findAll().forEach(books::add);
         return books;
+    }
+
+    @Override
+    public List<Book> getBooksByGenre(Genre genre) {
+        return bookManagerRepository.findByGenre(genre);
     }
 
     @Override
