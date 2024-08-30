@@ -32,8 +32,14 @@ public class BookManagerServiceImpl implements BookManagerService {
     }
 
     @Override
-    public Book insertBook(Book book) {
-        return bookManagerRepository.save(book);
+    public Optional<Book> insertBook(Book book) {
+        Optional<Book> foundBook = bookManagerRepository.findById(book.getId());
+
+        if (foundBook.isPresent()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(bookManagerRepository.save(book));
     }
 
     @Override
@@ -43,17 +49,17 @@ public class BookManagerServiceImpl implements BookManagerService {
 
     @Override
     public Optional<Book> replaceBook(Long id, Book bookToPut) {
-        Optional<Book> foundbook = bookManagerRepository.findById(id);
+        Optional<Book> foundBook = bookManagerRepository.findById(id);
 
-        if (foundbook.isPresent()) {
-            foundbook.get().setTitle(bookToPut.getTitle());
-            foundbook.get().setDescription(bookToPut.getDescription());
-            foundbook.get().setAuthor(bookToPut.getAuthor());
-            foundbook.get().setGenre(bookToPut.getGenre());
-            bookManagerRepository.save(foundbook.get());
+        if (foundBook.isPresent()) {
+            foundBook.get().setTitle(bookToPut.getTitle());
+            foundBook.get().setDescription(bookToPut.getDescription());
+            foundBook.get().setAuthor(bookToPut.getAuthor());
+            foundBook.get().setGenre(bookToPut.getGenre());
+            bookManagerRepository.save(foundBook.get());
         }
 
-        return foundbook;
+        return foundBook;
     }
 
     @Override

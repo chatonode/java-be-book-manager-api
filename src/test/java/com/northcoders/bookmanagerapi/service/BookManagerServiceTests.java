@@ -53,9 +53,9 @@ public class BookManagerServiceTests {
 
         when(mockBookManagerRepository.save(book)).thenReturn(book);
 
-        Book actualResult = bookManagerServiceImpl.insertBook(book);
+        Optional<Book> actualResult = bookManagerServiceImpl.insertBook(book);
 
-        assertThat(actualResult).isEqualTo(book);
+        assertThat(actualResult.get()).isEqualTo(book);
     }
 
     @Test
