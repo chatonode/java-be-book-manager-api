@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/book")
@@ -21,6 +22,17 @@ public class BookManagerController {
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> books = bookManagerService.getAllBooks();
         return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+
+    @GetMapping("/:bookId")
+    public ResponseEntity<Book> getBookById() {
+//        List<Book> books = bookManagerService.
+        Optional<Book> bookFound = bookManagerService.getBookById(1L);
+        if (bookFound.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+//        return new ResponseEntity<>(bookManagerService.getBookById(), HttpStatus.OK);
     }
 
     @PostMapping

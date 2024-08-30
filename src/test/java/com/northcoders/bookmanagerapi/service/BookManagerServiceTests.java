@@ -37,6 +37,7 @@ public class BookManagerServiceTests {
         // Ensure that when .findAll() is invoked, it will always return the books above
         when(mockBookManagerRepository.findAll()).thenReturn(books);
 
+
         // Act
         List<Book> actualResult = bookManagerServiceImpl.getAllBooks();
 
