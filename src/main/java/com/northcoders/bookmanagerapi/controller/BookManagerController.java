@@ -27,7 +27,6 @@ public class BookManagerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable String id) {
-//        List<Book> books = bookManagerService.
         Optional<Book> bookFound = bookManagerService.getBookById(Long.parseLong(id));
 
         if (bookFound.isEmpty()) {
@@ -56,6 +55,19 @@ public class BookManagerController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("book", "/api/v1/book/" + updatedBook.get().getId().toString());
         return new ResponseEntity<>(updatedBook.get(), httpHeaders, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> deleteBookById(@PathVariable String id) {
+        Optional<Book> deletedBook = bookManagerService.deleteBookById(Long.parseLong(id));
+
+        if (deletedBook.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.remove("book");
+        return new ResponseEntity<>(httpHeaders, HttpStatus.NO_CONTENT);
     }
 
 }

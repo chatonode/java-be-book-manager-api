@@ -12,4 +12,5 @@ public interface BookManagerService {
 
     Optional<Book> getBookById(Long id);
     Optional<Book> replaceBook(Long id, Book book);
+    Optional<Book> deleteBookById(Long id);
 }

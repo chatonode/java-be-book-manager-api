@@ -49,4 +49,15 @@ public class BookManagerServiceImpl implements BookManagerService {
         return foundbook;
     }
 
+    @Override
+    public Optional<Book> deleteBookById(Long id) {
+        Optional<Book> foundBook = bookManagerRepository.findById(id);
+
+        if (foundBook.isPresent()) {
+            bookManagerRepository.deleteById(foundBook.get().getId());
+        }
+
+        return foundBook;
+    }
+
 }
