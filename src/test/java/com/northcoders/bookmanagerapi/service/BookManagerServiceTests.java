@@ -112,6 +112,55 @@ public class BookManagerServiceTests {
     }
 
 
+    @Test
+    public void testGetBookByIdReturnsBookWhenFound() {
+        // Arrange
+        Long bookId = 1L;
+        Book book = new Book(bookId, "Book One", "This is the description for Book One", "Author One", Genre.Education);
+
+        // Stub the repository's findById method to return the book when the given ID is found
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.of(book));
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.getBookById(bookId);
+
+        // Assert
+        assertThat(actualResult).isPresent();
+        assertThat(actualResult.get()).isEqualTo(book);
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+    }
+
+    @Test
+    public void testGetBookByIdReturnsEmptyWhenNotFound() {
+        // Arrange
+        Long bookId = 2L;
+
+        // Stub the repository's findById method to return an empty Optional when the book ID is not found
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.getBookById(bookId);
+
+        // Assert
+        assertThat(actualResult).isNotPresent();
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+    }
+
+    @Test
+    public void testGetBookByIdHandlesNullIdGracefully() {
+        // Arrange
+        Long bookId = null;
+
+        // Stub the repository's findById method to handle a null ID gracefully, returning an empty Optional
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Book> actualResult = bookManagerServiceImpl.getBookById(bookId);
+
+        // Assert
+        assertThat(actualResult).isNotPresent();
+        verify(mockBookManagerRepository, times(1)).findById(bookId);
+    }
 
 
 }
