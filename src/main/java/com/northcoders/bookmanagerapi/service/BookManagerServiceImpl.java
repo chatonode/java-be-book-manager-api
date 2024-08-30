@@ -3,6 +3,8 @@ package com.northcoders.bookmanagerapi.service;
 import com.northcoders.bookmanagerapi.model.Book;
 import com.northcoders.bookmanagerapi.repository.BookManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,8 +35,18 @@ public class BookManagerServiceImpl implements BookManagerService {
     }
 
     @Override
-    public Optional<Book> replaceBook(Long id, Book book) {
-        return bookManagerRepository.updateBookById(id, book);
+    public Optional<Book> replaceBook(Long id, Book bookToPut) {
+        Optional<Book> foundbook = bookManagerRepository.findById(id);
+
+        if (foundbook.isPresent()) {
+            foundbook.get().setTitle(bookToPut.getTitle());
+            foundbook.get().setDescription(bookToPut.getDescription());
+            foundbook.get().setAuthor(bookToPut.getAuthor());
+            foundbook.get().setGenre(bookToPut.getGenre());
+            bookManagerRepository.save(foundbook.get());
+        }
+
+        return foundbook;
     }
 
 }

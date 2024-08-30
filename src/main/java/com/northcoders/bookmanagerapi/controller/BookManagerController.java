@@ -55,7 +55,7 @@ public class BookManagerController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("book", "/api/v1/book/" + updatedBook.get().getId().toString());
-        return new ResponseEntity<>(updatedBook.get(), httpHeaders, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(updatedBook.get(), httpHeaders, HttpStatus.OK);
     }
 
 }
