@@ -6,7 +6,7 @@
 ## General
 spring.application.name=bookmanagerapi
 
-# Activating Amazon RDS property file
+# Activating `application-rds.properties`
 spring.profiles.active=rds
 ```
 
@@ -16,7 +16,7 @@ spring.profiles.active=rds
 
 spring.jpa.database=postgresql
 spring.datasource.driverClassName=org.postgresql.Driver
-spring.datasource.url=jdbc:postgresql://<OUR-DOMAIN-NAME>:<OUR-DOMAIN-PORT>/bookshop
+spring.datasource.url=jdbc:postgresql://<OUR-DOMAIN-NAME>:<OUR-DOMAIN-PORT>/<OUR-DB-NAME>
 spring.datasource.username=<OUR-USERNAME>
 spring.datasource.password=<OUR-PASSWORD>
 spring.jpa.database-platform=org.hibernate.dialect.PostgresPlusDialect
