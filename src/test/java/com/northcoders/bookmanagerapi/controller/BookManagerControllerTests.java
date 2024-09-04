@@ -122,7 +122,7 @@ public class BookManagerControllerTests {
 
         Book book = new Book(4L, "Book Four", "This is the description for Book Four", "Person Four", Genre.Fantasy);
 
-        when(mockBookManagerServiceImpl.insertBook(book)).thenReturn(Optional.of(book));
+        when(mockBookManagerServiceImpl.insertBook(book)).thenReturn(book);
 
         this.mockMvcController.perform(
                         MockMvcRequestBuilders.post("/api/v1/book/")

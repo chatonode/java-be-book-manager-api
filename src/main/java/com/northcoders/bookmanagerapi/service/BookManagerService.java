@@ -10,7 +10,7 @@ public interface BookManagerService {
 
     List<Book> getAllBooks();
     List<Book> getBooksByGenre(Genre genre);
-    Optional<Book> insertBook(Book book);
+    Book insertBook(Book book);
 
     Optional<Book> getBookById(Long id);
     Optional<Book> replaceBook(Long id, Book book);

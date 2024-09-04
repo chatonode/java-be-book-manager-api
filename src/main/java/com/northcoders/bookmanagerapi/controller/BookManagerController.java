@@ -2,6 +2,7 @@ package com.northcoders.bookmanagerapi.controller;
 
 import com.northcoders.bookmanagerapi.model.Book;
 import com.northcoders.bookmanagerapi.model.Genre;
+import com.northcoders.bookmanagerapi.model.response.SuccessResponse;
 import com.northcoders.bookmanagerapi.service.BookManagerService;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,16 +43,14 @@ public class BookManagerController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        Optional<Book> newBook = bookManagerService.insertBook(book);
+    public ResponseEntity<SuccessResponse<Book>> addBook(@RequestBody Book book) {
+        Book newBook = bookManagerService.insertBook(book);
 
-        if (newBook.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        SuccessResponse<Book> successResponse = new SuccessResponse<>(HttpStatus.CREATED, book, SuccessResponse.OperationResult.CREATED);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("book", "/api/v1/book/" + newBook.get().getId().toString());
-        return new ResponseEntity<>(newBook.get(), httpHeaders, HttpStatus.CREATED);
+        httpHeaders.add("book", "/api/v1/book/" + newBook.getId().toString());
+        return new ResponseEntity<>(successResponse, httpHeaders, successResponse.getStatus());
     }
 
     @PutMapping("/{id}")

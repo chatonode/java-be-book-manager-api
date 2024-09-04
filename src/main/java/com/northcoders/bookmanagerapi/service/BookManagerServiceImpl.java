@@ -1,5 +1,6 @@
 package com.northcoders.bookmanagerapi.service;
 
+import com.northcoders.bookmanagerapi.exception.ResourceAlreadyExistsException;
 import com.northcoders.bookmanagerapi.model.Book;
 import com.northcoders.bookmanagerapi.model.Genre;
 import com.northcoders.bookmanagerapi.repository.BookManagerRepository;
@@ -32,14 +33,14 @@ public class BookManagerServiceImpl implements BookManagerService {
     }
 
     @Override
-    public Optional<Book> insertBook(Book book) {
+    public Book insertBook(Book book) {
         Optional<Book> foundBook = bookManagerRepository.findById(book.getId());
 
         if (foundBook.isPresent()) {
-            return Optional.empty();
+            throw new ResourceAlreadyExistsException(Book.class.getSimpleName(), foundBook.get().getId());
         }
 
-        return Optional.of(bookManagerRepository.save(book));
+        return bookManagerRepository.save(book);
     }
 
     @Override

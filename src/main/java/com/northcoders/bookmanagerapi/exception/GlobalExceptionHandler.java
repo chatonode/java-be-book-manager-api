@@ -1,12 +1,10 @@
 package com.northcoders.bookmanagerapi.exception;
 
-import com.northcoders.bookmanagerapi.model.exception.ErrorResponse;
+import com.northcoders.bookmanagerapi.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -16,10 +14,9 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.CONFLICT)
                 .message(e.getMessage())
-
                 .build();
 
-        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = ResourceNotFoundException.class)
