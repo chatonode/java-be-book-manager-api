@@ -31,4 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-application-prod.properties
+#application-prod.properties
+application.properties
+application-rds.properties
